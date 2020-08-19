@@ -13,7 +13,7 @@ const Routes = () => (
         <Route exact path="/" component={ Home } />
         <Route path="/createList" component={ Create } />
         <Route exact path="/createList/:id" render={(props) => (<Create {...props} />)}/> 
-        <Route exact path="/list/:id" component={ List }  />     
+        <Route path="/list/:id" component={ List }  />     
       </Switch>
   </BrowserRouter>  
 );
