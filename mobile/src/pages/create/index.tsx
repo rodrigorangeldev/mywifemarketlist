@@ -1,48 +1,11 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList } from 'react-native'
+import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
+import RenderItem from '../../components/RenderItem'
 
-interface Props{
-   id: string
-   title: string,
-   qtd: number,
-   description: string
-}
+import { makeid } from '../../util'
 
-interface ListRenderItem {
-   item: {
-      id: string,
-      title: string,
-      description: string,
-      model: string,
-      qtd: number,
-      lastPrice: number
-   }
-}
-
-interface IData {
-   id: string,
-   title: string,
-   description: string,
-   model: string,
-   qtd: number,
-   lastPrice: number
-}
-
-const Item : React.FC<Props> = ({ title, description, qtd }) => (
-   <View style={styles.item}>
-     <Text style={styles.title}>{title}</Text>
-     <Text>{description}</Text>
-     <Text>{qtd}</Text>
-   </View>
- );
-
- const renderItem: React.FC<ListRenderItem> = ({ item }) => (
-   <Item id={item.id} title={item.title} qtd={item.qtd} description={item.description} />
- );
-
- 
-
+import { IData } from '../../interfaces'
 
 export default () => {
 
@@ -51,16 +14,6 @@ export default () => {
    const [qtd, setQtd] = useState(0)
    const [lastPrice, setLastPrice] = useState(0)
    const [data, setData] = useState<IData[]>([])
-
-   function makeid(length:number) {
-      var result           = '';
-      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var charactersLength = characters.length;
-      for ( var i = 0; i < length; i++ ) {
-         result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
-   }
 
    function handleAdd(){
       const item = {
@@ -76,42 +29,56 @@ export default () => {
    }
 
    return (
-   <View style={styles.container}>
+   <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : undefined} style={{ flex: 1}}>
+     <SafeAreaView style={styles.container}>
+     
+      <View style={styles.inner}>
 
-      <View style={styles.listContainer}>
-         
-         <SafeAreaView>
-            <FlatList 
-               data={ data }
-               renderItem={renderItem}
-               keyExtractor={item => item.id}
-             />
-         </SafeAreaView>
+         <View style={styles.listContainer}>
+            
+            <SafeAreaView>
+               <FlatList 
+                  data={ data }
+                  renderItem={RenderItem}
+                  keyExtractor={item => item.id}
+               />
+            </SafeAreaView>
+
+         </View>
+
+         <View style={styles.inputContainer} >
+            <TextInput style={[styles.input, styles.shadow]} 
+               placeholder="Descrição" 
+               maxLength={50} 
+               onChangeText={setDescription} 
+            />
+            <TextInput 
+               style={[styles.input, styles.shadow]} 
+               placeholder="Marca / Modelo" 
+               maxLength={50} 
+               onChangeText={setModel} 
+            />
+            <View style={styles.inputGroup}>
+               <TextInput 
+                  style={[styles.input, styles.shadow]} 
+                  placeholder="Quantidade" 
+                  onChangeText={e => setQtd(Number(e))} />
+
+               <TextInput 
+                  style={[styles.input, {marginLeft: 10}, styles.shadow]} 
+                  placeholder="Preço anterior" 
+                  onChangeText={(e) => setLastPrice(Number(e))} />
+            </View>
+            <View style={styles.buttonContainer}>
+               <RectButton style={[styles.button, styles.shadow]} onPress={handleAdd}>
+                  <Text style={styles.buttonText}>ADICIONAR</Text>
+               </RectButton>
+            </View>
+         </View>
 
       </View>
-
-      <View style={styles.inputContainer} >
-         <TextInput style={styles.input} placeholder="Descrição" onChangeText={setDescription} />
-         <TextInput style={styles.input} placeholder="Marca / Modelo" onChangeText={setModel} />
-         <View style={styles.inputGroup}>
-            <TextInput 
-               style={styles.input} 
-               placeholder="Quantidade" 
-               onChangeText={e => setQtd(Number(e))} />
-
-            <TextInput 
-               style={[styles.input, {marginLeft: 10}]} 
-               placeholder="Preço anterior" 
-               onChangeText={(e) => setLastPrice(Number(e))} />
-         </View>
-         <View style={styles.buttonContainer}>
-            <RectButton style={styles.button} onPress={handleAdd}>
-               <Text>Adicionar</Text>
-            </RectButton>
-         </View>
-      </View>
-
-   </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
    )
 }
 
@@ -119,6 +86,11 @@ const styles = StyleSheet.create({
    container: {
       flex: 1
    },
+   inner: {
+      flex: 1,
+      justifyContent: "flex-end",
+      marginBottom: 20
+  },
    input: {
       height: 60,
       backgroundColor: '#FFF',
@@ -142,22 +114,30 @@ const styles = StyleSheet.create({
       height: 60,
       backgroundColor: '#81c784',
       flexDirection: 'row',
-      borderRadius: 20,
+      borderRadius: 5,
       overflow: 'hidden',
       alignItems: 'center',
-      marginTop: 8
+      marginTop: 8,
    },
    listContainer: {
       marginTop: 20,
       height: 270
    },
-   item: {
-      backgroundColor: '#f9c2ff',
-      padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
-    },
-    title: {
-      fontSize: 32,
-    },
+   shadow: {
+      shadowColor: "#000",
+      shadowOffset: {
+         width: 0,
+         height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+   },
+   buttonText: {
+      flex: 1,
+      justifyContent: 'center',
+      textAlign: 'center',
+      color: '#FFF',
+      fontSize: 18
+   }
 })
