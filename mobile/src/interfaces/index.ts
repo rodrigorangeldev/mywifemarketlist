@@ -26,8 +26,16 @@ interface IData {
    lastPrice: number
 }
 
+interface IProduct {
+   id: string,
+   title: string,
+   model: string
+}
+
+
 export {
    Props,
    ListRenderItem,
-   IData
+   IData,
+   IProduct
 }

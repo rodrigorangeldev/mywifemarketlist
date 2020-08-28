@@ -7,15 +7,19 @@ export default () => {
 
    const navigation = useNavigation()
 
-   function handleToCreateList(){
-      navigation.navigate('Create')
+   function handleToCreateList(to:string){
+      navigation.navigate(to)
    }
 
    return (
    <View style={styles.container}>
       <Text>Home</Text>
 
-      <RectButton style={styles.button} onPress={handleToCreateList}>
+      <RectButton style={styles.button} onPress={() => handleToCreateList('Create')}>
+         <Text>Criar nova lista</Text>
+      </RectButton>
+
+      <RectButton style={styles.button} onPress={() => handleToCreateList('Product')}>
          <Text>Criar nova lista</Text>
       </RectButton>
 
