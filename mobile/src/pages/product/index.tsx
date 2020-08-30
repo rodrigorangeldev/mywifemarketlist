@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
-import { RectButton } from 'react-native-gesture-handler'
-
-import RenderItem from '../../components/RenderItem'
+import { RectButton, TouchableOpacity } from 'react-native-gesture-handler'
 
 import { makeid } from '../../util'
 
@@ -13,16 +11,22 @@ export default () => {
    const [description, setDescription] = useState('')
    const [model, setModel] = useState('')
    const [data, setData] = useState<IProduct[]>([])
-
+   
    function handleAdd(){
       const item = {
          id: makeid(4),
          title: description,
          model
-      }
+      }        
 
       setData([item, ...data])
    }
+
+   const _renderItem = (item: IProduct) => (
+      <TouchableOpacity onPress={() => {}}>
+        <Text>{item.title}</Text>
+      </TouchableOpacity>
+   );
 
    return (
    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : undefined} style={{ flex: 1}}>
@@ -35,7 +39,7 @@ export default () => {
             <SafeAreaView>
                <FlatList 
                   data={ data }
-                  renderItem={RenderItem}
+                  renderItem={({item}) => _renderItem(item)}
                   keyExtractor={item => item.id}
                />
             </SafeAreaView>
