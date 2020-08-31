@@ -1,48 +1,35 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
-import { RectButton, } from 'react-native-gesture-handler'
-
-import { makeid } from '../../util'
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, Text, KeyboardAvoidingView, Platform, SafeAreaView, FlatList } from 'react-native'
 
 import { IProduct } from '../../interfaces'
 
 export default () => {
 
-   const [description, setDescription] = useState('')
-   const [model, setModel] = useState('')
    const [data, setData] = useState<IProduct[]>([])
-   
-   function handleAdd(){
-      const item = {
-         id: makeid(4),
-         title: description,
-         model
-      }        
 
-      setData([item, ...data])
+   useEffect(() => {
 
       const list = localStorage.getItem('listOfProducts')
 
       if(list){
          let listObj = JSON.parse(list)
-         localStorage.setItem('listOfProducts', JSON.stringify([item, ...listObj]))
-      }else{
-         localStorage.setItem('listOfProducts', JSON.stringify(data))
+         setData(listObj)
       }
 
-   }
+   }, [])
 
    const _renderItem = (item: IProduct) => (
 
       <View style={styles.containerItem}>
          <View style={styles.insideDetail}></View>
          <View style={[styles.item, styles.shadow]}>
-            <Text style={styles.title}>{description}</Text>
+            <Text style={styles.title}>{item}</Text>
             <Text>Id: {item.id}</Text>
             <Text>{item.model}</Text>
          </View>
       </View>
    );
+
 
    return (
    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : undefined} style={{ flex: 1}}>
@@ -60,25 +47,6 @@ export default () => {
                />
             </SafeAreaView>
 
-         </View>
-
-         <View style={styles.inputContainer} >
-            <TextInput style={[styles.input, styles.shadow]} 
-               placeholder="Informe uma descrição" 
-               maxLength={50} 
-               onChangeText={setDescription} 
-            />
-            <TextInput 
-               style={[styles.input, styles.shadow]} 
-               placeholder="Marca / Modelo" 
-               maxLength={50} 
-               onChangeText={setModel} 
-            />
-            <View style={styles.buttonContainer}>
-               <RectButton style={[styles.button, styles.shadow]} onPress={handleAdd}>
-                  <Text style={styles.buttonText}>ADICIONAR</Text>
-               </RectButton>
-            </View>
          </View>
 
       </View>
