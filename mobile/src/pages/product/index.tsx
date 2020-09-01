@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, StyleSheet, Image, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
 import { RectButton, } from 'react-native-gesture-handler'
 
+import inserIcon from '../../assets/icons/baixar.svg'
+
 import { makeid } from '../../util'
+import { retrieveData, storeData } from '../../repository'
 
 import { IProduct } from '../../interfaces'
 
@@ -10,25 +13,31 @@ export default () => {
 
    const [description, setDescription] = useState('')
    const [model, setModel] = useState('')
-   const [data, setData] = useState<IProduct[]>([])
-   
+   const [data, setData] = useState<IProduct[]>([] as IProduct[])
+
    function handleAdd(){
       const item = {
-         id: makeid(4),
-         title: description,
-         model
-      }        
+               id: makeid(4),
+               title: description,
+               model
+            }        
 
       setData([item, ...data])
 
-      const list = localStorage.getItem('listOfProducts')
+      retrieveData('listOfProducts')
+         .then( list => {
 
-      if(list){
-         let listObj = JSON.parse(list)
-         localStorage.setItem('listOfProducts', JSON.stringify([item, ...listObj]))
-      }else{
-         localStorage.setItem('listOfProducts', JSON.stringify(data))
-      }
+            if(list){
+               let listObj = JSON.parse(list)
+               storeData(JSON.stringify([item, ...listObj]), 'listOfProducts')
+            }else{
+               storeData(JSON.stringify(data), 'listOfProducts')
+            }
+
+         })
+         .catch(err => console.log(err))
+
+      
 
    }
 
@@ -37,7 +46,7 @@ export default () => {
       <View style={styles.containerItem}>
          <View style={styles.insideDetail}></View>
          <View style={[styles.item, styles.shadow]}>
-            <Text style={styles.title}>{description}</Text>
+            <Text style={styles.title}>{item.title}</Text>
             <Text>Id: {item.id}</Text>
             <Text>{item.model}</Text>
          </View>
@@ -77,6 +86,7 @@ export default () => {
             <View style={styles.buttonContainer}>
                <RectButton style={[styles.button, styles.shadow]} onPress={handleAdd}>
                   <Text style={styles.buttonText}>ADICIONAR</Text>
+                  <Image source={inserIcon} />
                </RectButton>
             </View>
          </View>
@@ -168,4 +178,8 @@ const styles = StyleSheet.create({
    title: {
       fontSize: 20,
     },
+    iconButton: {
+       fontSize: 10,
+       color: '#FFF'
+    }
 })

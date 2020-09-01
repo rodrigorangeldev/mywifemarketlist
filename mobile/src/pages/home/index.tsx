@@ -14,7 +14,7 @@ export default () => {
    return (
    <View style={styles.container}>
       
-      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Create')}>
+      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Product')}>
          <View style={styles.insideButtonContainer}>
             <Text style={styles.titleButton}>Nova lista</Text>
             <Text style={{color: '#FFF'}}>com base em produtos cadastrados</Text>
@@ -27,7 +27,7 @@ export default () => {
          </View>
       </RectButton>
 
-      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Product')}>
+      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Create')}>
         <View style={styles.insideButtonContainer}>
          <Text style={styles.titleButton} >Criar lista avulsa</Text>
         </View>
