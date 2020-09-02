@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, SafeAreaView, FlatList } from 'react-native'
 
 import { IProduct } from '../../interfaces'
-import { retrieveData } from '../../repository'
+import { retrieveData, storeData } from '../../repository'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import { Feather as Icon } from '@expo/vector-icons'
 
 export default () => {
 
@@ -13,12 +16,29 @@ export default () => {
       <View style={styles.containerItem}>
          <View style={styles.insideDetail}></View>
          <View style={[styles.item, styles.shadow]}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text>Id: {item.id}</Text>
-            <Text>{item.model}</Text>
+            
+            <View>
+               <Text style={styles.title}>{item.title}</Text>
+               <Text>Id: {item.id}</Text>
+               <Text>{item.model}</Text>
+            </View>
+
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+               <TouchableOpacity onPress={() => removeFromList(item.id)}>
+                  <Icon name="trash-2" color="#FFF" size={30} />
+               </TouchableOpacity>
+            </View>
          </View>
+
       </View>
    );
+
+   const removeFromList = (id: string) => {
+      const list = data.filter(product => product.id != id)
+
+      setData(list)
+      storeData(JSON.stringify(list), 'listOfProducts')
+   }
 
    useEffect(() => {
 
@@ -26,8 +46,7 @@ export default () => {
          .then(list => {
 
             if (list) {
-               let listObj = JSON.parse(list)
-               setData(listObj)
+               setData(JSON.parse(list))
             }
 
          })
@@ -79,7 +98,8 @@ const styles = StyleSheet.create({
       width: 320,
       marginVertical: 8,
       marginHorizontal: 1,
-      maxHeight: 106
+      maxHeight: 106,
+      flexDirection: 'row'
    },
    containerItem: {
       flex: 1,
@@ -90,4 +110,9 @@ const styles = StyleSheet.create({
    title: {
       fontSize: 20,
    },
+   buttonContainer: {
+      alignContent: 'center',
+      justifyContent: 'center',
+      
+   }
 })

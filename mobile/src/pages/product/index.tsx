@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Image, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
-import { RectButton, } from 'react-native-gesture-handler'
+import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
+import { RectButton, TouchableOpacity, } from 'react-native-gesture-handler'
 
-import inserIcon from '../../assets/icons/baixar.svg'
+import { Feather as Icon } from '@expo/vector-icons'
 
 import { makeid } from '../../util'
 import { retrieveData, storeData } from '../../repository'
@@ -37,8 +37,6 @@ export default () => {
          })
          .catch(err => console.log(err))
 
-      
-
    }
 
    const _renderItem = (item: IProduct) => (
@@ -49,6 +47,7 @@ export default () => {
             <Text style={styles.title}>{item.title}</Text>
             <Text>Id: {item.id}</Text>
             <Text>{item.model}</Text>
+
          </View>
       </View>
    );
@@ -85,8 +84,7 @@ export default () => {
             />
             <View style={styles.buttonContainer}>
                <RectButton style={[styles.button, styles.shadow]} onPress={handleAdd}>
-                  <Text style={styles.buttonText}>ADICIONAR</Text>
-                  <Image source={inserIcon} />
+                  <Text style={styles.buttonText}>ADICIONAR  <Icon name="arrow-down-circle" color="#FFF" size={20} /></Text>
                </RectButton>
             </View>
          </View>
@@ -132,6 +130,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       overflow: 'hidden',
       alignItems: 'center',
+      justifyContent: 'center',
       marginTop: 8,
    },
    listContainer: {
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       textAlign: 'center',
       color: '#FFF',
-      fontSize: 18
+      fontSize: 20
    },
    insideDetail: {
       width: 10,
@@ -179,7 +178,8 @@ const styles = StyleSheet.create({
       fontSize: 20,
     },
     iconButton: {
-       fontSize: 10,
-       color: '#FFF'
+       height: 20,
+       width: 20
+       
     }
 })
