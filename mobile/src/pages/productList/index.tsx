@@ -17,7 +17,7 @@ export default () => {
          <View style={styles.insideDetail}></View>
          <View style={[styles.item, styles.shadow]}>
             
-            <View>
+            <View style={{maxWidth: 230}}>
                <Text style={styles.title}>{item.title}</Text>
                <Text>Id: {item.id}</Text>
                <Text>{item.model}</Text>

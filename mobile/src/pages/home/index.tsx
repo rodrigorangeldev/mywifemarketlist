@@ -19,15 +19,15 @@ export default () => {
       <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('SelectedList')}>
          <View style={styles.insideButtonContainer}>
             <Text style={styles.titleButton}><Icon name="list" size={20} color="#FFF" /> Nova lista</Text>
-            <Text style={{color: '#FFF'}}>com base em produtos cadastrados</Text>
+            {/* <Text style={{color: '#FFF'}}>com base em produtos cadastrados</Text> */}
          </View>
       </RectButton>
 
-      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Create')}>
+      {/* <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Create')}>
         <View style={styles.insideButtonContainer}>
          <Text style={styles.titleButton} ><Icon name="list" size={20} color="#FFF" /> Criar lista avulsa</Text>
         </View>
-      </RectButton>
+      </RectButton> */}
 
       <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Product')}>
         <View style={styles.insideButtonContainer}>

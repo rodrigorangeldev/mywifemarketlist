@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
-import { RectButton, TouchableOpacity, } from 'react-native-gesture-handler'
+import { RectButton } from 'react-native-gesture-handler'
 
 import { Feather as Icon } from '@expo/vector-icons'
 
@@ -73,13 +73,13 @@ export default () => {
          <View style={styles.inputContainer} >
             <TextInput style={[styles.input, styles.shadow]} 
                placeholder="Informe uma descrição" 
-               maxLength={50} 
+               maxLength={25} 
                onChangeText={setDescription} 
             />
             <TextInput 
                style={[styles.input, styles.shadow]} 
                placeholder="Marca / Modelo" 
-               maxLength={50} 
+               maxLength={25} 
                onChangeText={setModel} 
             />
             <View style={styles.buttonContainer}>

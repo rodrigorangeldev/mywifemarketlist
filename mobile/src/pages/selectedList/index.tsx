@@ -1,73 +1,112 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, SafeAreaView, FlatList } from 'react-native'
-import { Picker } from '@react-native-community/picker'
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Alert } from 'react-native'
 import RenderItem from '../../components/RenderItem'
+import  DropDownPicker  from 'react-native-dropdown-picker'
+import { Feather as Icon } from '@expo/vector-icons'
+
 
 import { makeid } from '../../util'
 import { IData } from '../../interfaces'
-import { retrieveData } from '../../repository'
+import { retrieveData, storeData } from '../../repository'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default () => {
 
    const [data, setData] = useState<IData[]>([])
-   const [selectedValue, setSelectedValue] = useState('Pressione aqui para selecionar...')
    const [selectedProducts, setSelectedProducts] = useState<IData[]>([])
 
-   const productControl = (id: string) => {
-      const product = data.find(product => product.id = id)
+   const productControl = (item : any) => {
+       
+       const product = data.find(product => product.id == String(item.value) )
 
-      console.log(product)
+         if(product && selectedProducts.filter(product => product.id == item.value ).length <= 0){
+            
+            setSelectedProducts([product as IData, ...selectedProducts])
+            
+            storeData(JSON.stringify(selectedProducts), 'listInUse')
 
-      setSelectedValue(String(product?.description))
-      setSelectedProducts([product as IData, ...selectedProducts])
+            console.log(product)
+
+          }else{
+            Alert.alert('Oops', 'Este item já foi incluído.')
+          }
+       
    } 
-   
 
    useEffect(() => {
-
+      
       retrieveData('listOfProducts')
          .then(list => {
-
             if (list) {
-               let listObj = JSON.parse(list)
-               setData(listObj)
+               setData(JSON.parse(list))
             }
-
          })
-         .catch(err => console.log(err))
+         .catch(err => console.log('Erro ao obter a lista de produtos', err))
+
+      retrieveData('listInUse')
+         .then(list => {
+            if (list) {
+               setSelectedProducts(JSON.parse(list))
+            }
+         })
+         .catch(err => console.log('Erro ao obter a lista em uso', err))
+
    }, [])
+
 
    return (
 
       <View style={styles.container}>
 
          <View style={styles.selectContainer}>
-         <Picker
-            mode="dialog"
-            selectedValue={'Selecione um produto...'}
-            style={[styles.picker, styles.shadow]}
-            onValueChange={(itemValue, itemIndex) => productControl(String(itemValue)) }
-            >
-
-            {
-               data.map(product => <Picker.Item 
-                                       key={product.id} 
-                                       label={product.title} 
-                                       value={product.id} 
-                                    /> )
-            }
-
-            </Picker>
+            <DropDownPicker
+               placeholder="Selecione um produto..."
+               items={ data.map(product => { return { 
+                     label: `${product.title} - ${product.model}`, 
+                     value: product.id,
+                     icon: () => <Icon name="shopping-bag" size={24}  /> 
+                  }  
+               } )
+                  // [
+                  //    { label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                  //    { label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" /> }
+                  // ]
+                }
+               defaultValue={''}
+               containerStyle={{ height: 100 }}
+               style={{ backgroundColor: '#fafafa'}}
+               labelStyle={{fontSize: 20}}
+               itemStyle={{
+                  justifyContent: 'flex-start',
+                  height: 60
+               }}
+               dropDownStyle={{ backgroundColor: '#fafafa' }}
+               onChangeItem={productControl}
+               dropDownMaxHeight={300}
+            />
          </View>
 
          <View style={styles.listContainer}>
             <SafeAreaView>
                <FlatList 
-                  data={ selectedProducts }
+                  data={ selectedProducts || [] }
                   renderItem={RenderItem}
                   keyExtractor={item => item.id}
                />
             </SafeAreaView>
+         </View>
+
+         <View style={{marginHorizontal: 15}}>
+               <TouchableOpacity style={styles.button}>
+                  <View style={styles.insideButtonContainer}>
+                     <Text style={styles.titleButton}> Salvar esta lista </Text>
+                  </View>
+               </TouchableOpacity>
          </View>
 
       </View>
@@ -82,7 +121,7 @@ const styles = StyleSheet.create({
    },
    listContainer: {
       marginTop: 20,
-      height: 270
+      maxHeight: '65%'
    },
    shadow: {
       shadowColor: "#000",
@@ -93,6 +132,24 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
+   },
+   button: {
+      height: 80,
+      borderRadius: 10,
+      backgroundColor: '#81c784',
+      overflow: 'hidden',
+      alignItems: 'center',
+      marginTop: 8
+   },
+   insideButtonContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: "center"
+   },
+   titleButton: {
+      fontSize: 20,
+      color: '#FFF',
+      fontWeight: 'bold'
    },
    picker: {
       height: 80,

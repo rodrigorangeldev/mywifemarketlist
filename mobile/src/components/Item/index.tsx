@@ -3,11 +3,11 @@ import { View, Text, StyleSheet } from 'react-native'
 
 import { Props } from '../../interfaces'
 
-const Item : React.FC<Props> = ({id, description, qtd, lastPrice }) => (
+const Item : React.FC<Props> = ({id, description, qtd, lastPrice, title }) => (
   <View style={styles.container}>
       <View style={styles.insideDetail}></View>
    <View style={[styles.item, styles.shadow]}>
-      <Text style={styles.title}>{description}</Text>
+      <Text style={styles.title}>{title}</Text>
       <Text>Id: {id}</Text>
       <Text>Quantidade: {qtd} Último preço: {lastPrice}</Text>
    </View>
