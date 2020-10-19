@@ -45,7 +45,7 @@ export default () => {
          <View style={styles.insideDetail}></View>
          <View style={[styles.item, styles.shadow]}>
             <Text style={styles.title}>{item.title}</Text>
-            <Text>Id: {item.id}</Text>
+            {/* <Text>Id: {item.id}</Text> */}
             <Text>{item.model}</Text>
 
          </View>

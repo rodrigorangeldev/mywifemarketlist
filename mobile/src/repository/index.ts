@@ -17,7 +17,17 @@ const retrieveData = async (value: string) => {
    }
 }
 
+const removeItem = async (value: string) => {
+   try {
+     const obj =  await AsyncStorage.removeItem(value)
+     return obj
+   } catch (error) {
+      console.log(error)
+   }
+}
+
 export {
    storeData,
-   retrieveData
+   retrieveData,
+   removeItem
 }

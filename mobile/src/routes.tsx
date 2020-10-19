@@ -7,6 +7,7 @@ import create from './pages/create'
 import product from './pages/product'
 import productLit from './pages/productList'
 import selectedList from './pages/selectedList'
+import myLists from './pages/myLists'
 
 const appStack = createStackNavigator()
 
@@ -19,6 +20,7 @@ export default () => {
             <appStack.Screen name="Product" component={product} />
             <appStack.Screen name="ProductList" component={productLit} />
             <appStack.Screen name="SelectedList" component={selectedList} />
+            <appStack.Screen name="MyLists" component={myLists} />
          </appStack.Navigator>
       </NavigationContainer>
    )

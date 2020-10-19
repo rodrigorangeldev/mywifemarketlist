@@ -23,6 +23,13 @@ export default () => {
          </View>
       </RectButton>
 
+      <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('MyLists')}>
+         <View style={styles.insideButtonContainer}>
+            <Text style={styles.titleButton}><Icon name="shopping-cart" size={20} color="#FFF" /> Minhas listas</Text>
+            {/* <Text style={{color: '#FFF'}}>com base em produtos cadastrados</Text> */}
+         </View>
+      </RectButton>
+
       {/* <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('Create')}>
         <View style={styles.insideButtonContainer}>
          <Text style={styles.titleButton} ><Icon name="list" size={20} color="#FFF" /> Criar lista avulsa</Text>
@@ -37,7 +44,7 @@ export default () => {
 
       <RectButton style={[styles.button, styles.shadow]} onPress={() => handleNavigate('ProductList')}>
          <View style={styles.insideButtonContainer}>
-            <Text style={styles.titleButton} ><Icon name="menu" size={20} color="#FFF" /> Meus produtos</Text>
+            <Text style={styles.titleButton} ><Icon name="archive" size={20} color="#FFF" /> Meus produtos</Text>
          </View>
       </RectButton>
 

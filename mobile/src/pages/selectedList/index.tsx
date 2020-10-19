@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Alert } from 'react-native'
+import { View, Text, TextInput, StyleSheet, SafeAreaView, FlatList, Alert } from 'react-native'
 import RenderItem from '../../components/RenderItem'
 import  DropDownPicker  from 'react-native-dropdown-picker'
 import { Feather as Icon } from '@expo/vector-icons'
 
-
-import { makeid } from '../../util'
 import { IData } from '../../interfaces'
-import { retrieveData, storeData } from '../../repository'
+import { retrieveData, storeData, removeItem } from '../../repository'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { KeyboardAvoidingView } from 'react-native'
+import { Platform } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+
 
 export default () => {
 
+   const nav = useNavigation()
+
    const [data, setData] = useState<IData[]>([])
    const [selectedProducts, setSelectedProducts] = useState<IData[]>([])
+   const [nameOfList, setNameOfList] = useState<string>('')
 
    const productControl = (item : any) => {
        
@@ -32,6 +37,61 @@ export default () => {
           }
        
    } 
+
+   const handleSaveList = () => {
+     
+      //   retrieveData('allOfLists')
+      //      .then(list => console.log(list))
+
+      //removeItem('allOfLists')
+
+      if(!nameOfList){
+         Alert.alert('Nome da lista', 'Dê um nome para sua lista antes de salvar!')
+      }
+      else{
+
+         const myList = {
+            nameOfList,
+            date: new Date(),
+            selectedProducts 
+         }
+
+         retrieveData('allOfLists')
+         .then(list => {
+            if (list) {
+                  let listParsed = JSON.parse(list)
+
+                     let isExists = false
+                  
+                     listParsed.map((item:any) => {
+                        if(item.nameOfList.trim().toLowerCase() == nameOfList.trim().toLowerCase())
+                           isExists = true
+                     })
+
+                     if(isExists){
+                        Alert.alert('Item existente', 'Já existe uma lista cadastrada com esse nome!')
+                        return false;
+                     }else{
+                        listParsed.push(myList)
+                        storeData(JSON.stringify(listParsed), 'allOfLists')
+                     }
+
+            }else{
+               storeData(JSON.stringify([myList]), 'allOfLists')
+            }
+
+            
+            Alert.alert('Sucesso', 'Lista salva com sucesso!')
+
+            removeItem('listInUse')
+
+            nav.navigate('Home')
+
+         })
+         .catch(err => console.log('Erro ao obter a lista de produtos', err))
+
+      }
+   }
 
    useEffect(() => {
       
@@ -89,6 +149,23 @@ export default () => {
                onChangeItem={productControl}
                dropDownMaxHeight={300}
             />
+
+            <View style={styles.inputContainer}>
+               <TextInput 
+                  placeholder="Quantidade" 
+                  style={[styles.input, styles.shadow]} 
+               />
+               <TextInput 
+                  placeholder="Preço anterior" 
+                  style={[styles.input, styles.shadow]} 
+               />
+               <TouchableOpacity style={styles.button}>
+                  <View style={styles.insideButtonContainer}>
+                     <Text style={styles.titleButton}> Incluir </Text>
+                  </View>
+               </TouchableOpacity>
+            </View>
+
          </View>
 
          <View style={styles.listContainer}>
@@ -101,13 +178,28 @@ export default () => {
             </SafeAreaView>
          </View>
 
-         <View style={{marginHorizontal: 15}}>
-               <TouchableOpacity style={styles.button}>
-                  <View style={styles.insideButtonContainer}>
-                     <Text style={styles.titleButton}> Salvar esta lista </Text>
+         {   
+            selectedProducts.length > 0 ?      
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : undefined} style={{ flex: 1}}>
+               <SafeAreaView style={styles.container}>
+                  <View style={styles.inputContainer}>
+                        <TextInput 
+                           placeholder="Dê um nome a sua lista..." 
+                           style={[styles.input, styles.shadow]} 
+                           onChangeText={setNameOfList}
+                           />
+                        <TouchableOpacity style={styles.button}
+                           onPress={handleSaveList}
+                        >
+                           <View style={styles.insideButtonContainer}>
+                              <Text style={styles.titleButton}> Salvar esta lista </Text>
+                           </View>
+                        </TouchableOpacity>
                   </View>
-               </TouchableOpacity>
-         </View>
+               </SafeAreaView>
+            </KeyboardAvoidingView>
+            : <></>
+         }
 
       </View>
      
@@ -121,7 +213,19 @@ const styles = StyleSheet.create({
    },
    listContainer: {
       marginTop: 20,
-      maxHeight: '65%'
+      maxHeight: '50%'
+   },
+   input: {
+      height: 60,
+      backgroundColor: '#FFF',
+      borderRadius: 10,
+      marginBottom: 8,
+      paddingHorizontal: 24,
+      fontSize: 16
+   },
+   inputContainer: {
+      marginTop: 20,
+      paddingHorizontal: 20
    },
    shadow: {
       shadowColor: "#000",

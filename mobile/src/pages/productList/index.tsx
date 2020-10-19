@@ -19,7 +19,7 @@ export default () => {
             
             <View style={{maxWidth: 230}}>
                <Text style={styles.title}>{item.title}</Text>
-               <Text>Id: {item.id}</Text>
+               {/* <Text>Id: {item.id}</Text> */}
                <Text>{item.model}</Text>
             </View>
 
