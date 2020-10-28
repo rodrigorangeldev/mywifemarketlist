@@ -10,8 +10,14 @@ const makeid =  (length:number) => {
    return result;
 }
 
+const dateToText = (data: string) => {
+   let date = new Date(data)
+   return `${date.getDate()}/${(date.getMonth()+1)}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+}
+
 export {
-   makeid
+   makeid,
+   dateToText
 } 
 
  

@@ -138,7 +138,7 @@ export default () => {
                   // ]
                 }
                defaultValue={''}
-               containerStyle={{ height: 100 }}
+               containerStyle={{ height: 70 }}
                style={{ backgroundColor: '#fafafa'}}
                labelStyle={{fontSize: 20}}
                itemStyle={{
@@ -148,24 +148,29 @@ export default () => {
                dropDownStyle={{ backgroundColor: '#fafafa' }}
                onChangeItem={productControl}
                dropDownMaxHeight={300}
+               zIndex={999}
             />
 
-            <View style={styles.inputContainer}>
+         </View>
+
+         <View style={styles.inputContainer}>
+            <View style={styles.inputContainer2}>
                <TextInput 
                   placeholder="Quantidade" 
-                  style={[styles.input, styles.shadow]} 
+                  style={[styles.input]} 
                />
                <TextInput 
                   placeholder="Preço anterior" 
-                  style={[styles.input, styles.shadow]} 
+                  style={[styles.input]} 
                />
+            </View>
+            <View style={{marginTop: 20}}>
                <TouchableOpacity style={styles.button}>
                   <View style={styles.insideButtonContainer}>
                      <Text style={styles.titleButton}> Incluir </Text>
                   </View>
                </TouchableOpacity>
             </View>
-
          </View>
 
          <View style={styles.listContainer}>
@@ -212,11 +217,11 @@ const styles = StyleSheet.create({
       flex: 1
    },
    listContainer: {
-      marginTop: 20,
+      marginVertical: 60,
       maxHeight: '50%'
    },
    input: {
-      height: 60,
+      height: 40,
       backgroundColor: '#FFF',
       borderRadius: 10,
       marginBottom: 8,
@@ -226,6 +231,12 @@ const styles = StyleSheet.create({
    inputContainer: {
       marginTop: 20,
       paddingHorizontal: 20
+   },
+   inputContainer2: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around'
+      
    },
    shadow: {
       shadowColor: "#000",
@@ -238,7 +249,7 @@ const styles = StyleSheet.create({
       elevation: 5,
    },
    button: {
-      height: 80,
+      height: 50,
       borderRadius: 10,
       backgroundColor: '#81c784',
       overflow: 'hidden',
@@ -256,7 +267,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold'
    },
    picker: {
-      height: 80,
+      height: 50,
       backgroundColor: '#81c784',
       color: '#FFF'
    },
