@@ -3,15 +3,19 @@ import { View, Text, StyleSheet } from 'react-native'
 
 import { Props } from '../../interfaces'
 
-const Item : React.FC<Props> = ({id, description, qtd, lastPrice, title }) => (
-  <View style={styles.container}>
-      <View style={styles.insideDetail}></View>
-   <View style={[styles.item, styles.shadow]}>
-      <Text style={styles.title}>{title}</Text>
-      <Text>Id: {id}</Text>
-      <Text>Quantidade: {qtd} Último preço: {lastPrice}</Text>
-   </View>
-   </View>
+const Item : React.FC<Props> = ({id, description, qtd, lastPrice, title, model }) => (
+  
+    <View style={{ marginHorizontal: 30}}>
+    <View style={styles.item}>
+      <Text style={styles.title}>
+        { title } - { model }
+      </Text>
+      <Text>
+        Quantidade: {qtd} Ultimo preço: {lastPrice}
+      </Text>
+    </View>
+    </View>
+  
  );
 
  export default Item
@@ -25,19 +29,12 @@ const Item : React.FC<Props> = ({id, description, qtd, lastPrice, title }) => (
    },
     item: {
       backgroundColor: '#CCC',
-      padding: 20,
-      width: 320,
-      marginVertical: 8,
-      marginHorizontal: 1,
-      maxHeight: 106
+      marginVertical: 5,
+      padding: 10,
+      borderRadius: 10
     },
     title: {
-      fontSize: 15,
-    },
-    insideDetail: {
-      width: 10,
-      height: 106,
-      backgroundColor: '#f9c2ff'
+      fontSize: 16,
     },
     shadow: {
       shadowColor: "#000",

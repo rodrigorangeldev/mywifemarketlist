@@ -19,6 +19,9 @@ export default () => {
    const [data, setData] = useState<IData[]>([])
    const [selectedProducts, setSelectedProducts] = useState<IData[]>([])
    const [nameOfList, setNameOfList] = useState<string>('')
+   const [lastPrice, setLastPrice] = useState<string>('0')
+   const [qtd, setQtd] = useState<string>('1')
+   const [includeProductList, setIncludeProductList] = useState<IData[]>([])
 
    const productControl = (item : any) => {
        
@@ -26,17 +29,23 @@ export default () => {
 
          if(product && selectedProducts.filter(product => product.id == item.value ).length <= 0){
             
+            product.lastPrice = Number(lastPrice)
+            product.qtd = Number(qtd)
+
             setSelectedProducts([product as IData, ...selectedProducts])
             
-            storeData(JSON.stringify(selectedProducts), 'listInUse')
-
-            console.log(product)
-
           }else{
             Alert.alert('Oops', 'Este item já foi incluído.')
           }
        
-   } 
+   }
+   
+   const includeInList = () => {
+
+      setIncludeProductList(selectedProducts)
+      storeData(JSON.stringify(selectedProducts), 'listInUse')
+      
+   }
 
    const handleSaveList = () => {
      
@@ -106,7 +115,7 @@ export default () => {
       retrieveData('listInUse')
          .then(list => {
             if (list) {
-               setSelectedProducts(JSON.parse(list))
+               setIncludeProductList(JSON.parse(list))
             }
          })
          .catch(err => console.log('Erro ao obter a lista em uso', err))
@@ -118,7 +127,7 @@ export default () => {
 
       <View style={styles.container}>
 
-         <View style={styles.selectContainer}>
+         <View>
             <DropDownPicker
                placeholder="Selecione um produto..."
                items={ data.map(product => { return { 
@@ -153,19 +162,25 @@ export default () => {
 
          </View>
 
-         <View style={styles.inputContainer}>
-            <View style={styles.inputContainer2}>
+         <View>
+            <View  style={{marginTop: 5, marginHorizontal: 30}}>
+               <Text>Quantidade</Text>
                <TextInput 
                   placeholder="Quantidade" 
                   style={[styles.input]} 
+                  onChangeText={setQtd}
+                  value={qtd}
                />
+               <Text>Preço anterior</Text>
                <TextInput 
                   placeholder="Preço anterior" 
                   style={[styles.input]} 
+                  onChangeText={setLastPrice}
+                  value={lastPrice}
                />
             </View>
-            <View style={{marginTop: 20}}>
-               <TouchableOpacity style={styles.button}>
+            <View style={{ marginHorizontal: 30}}>
+               <TouchableOpacity style={styles.button} onPress={() => includeInList()}>
                   <View style={styles.insideButtonContainer}>
                      <Text style={styles.titleButton}> Incluir </Text>
                   </View>
@@ -176,7 +191,7 @@ export default () => {
          <View style={styles.listContainer}>
             <SafeAreaView>
                <FlatList 
-                  data={ selectedProducts || [] }
+                  data={ includeProductList || [] }
                   renderItem={RenderItem}
                   keyExtractor={item => item.id}
                />
@@ -184,7 +199,7 @@ export default () => {
          </View>
 
          {   
-            selectedProducts.length > 0 ?      
+            includeProductList.length > 0 ?      
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : undefined} style={{ flex: 1}}>
                <SafeAreaView style={styles.container}>
                   <View style={styles.inputContainer}>
@@ -217,8 +232,8 @@ const styles = StyleSheet.create({
       flex: 1
    },
    listContainer: {
-      marginVertical: 60,
-      maxHeight: '50%'
+      marginVertical: 15,
+      maxHeight: '40%'
    },
    input: {
       height: 40,
@@ -229,7 +244,6 @@ const styles = StyleSheet.create({
       fontSize: 16
    },
    inputContainer: {
-      marginTop: 20,
       paddingHorizontal: 20
    },
    inputContainer2: {

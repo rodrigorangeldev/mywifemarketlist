@@ -3,7 +3,8 @@ interface Props{
    title: string,
    qtd: number,
    description: string,
-   lastPrice: number
+   lastPrice: number,
+   model: string
 }
 
 interface ListRenderItem {

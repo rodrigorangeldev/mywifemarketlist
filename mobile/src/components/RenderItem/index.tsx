@@ -12,6 +12,7 @@ import { ListRenderItem } from '../../interfaces'
       qtd={item.qtd} 
       description={item.description} 
       lastPrice={item.lastPrice} 
+      model={item.model}
     />
  );
 
