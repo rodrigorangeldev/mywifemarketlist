@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, StyleSheet, SafeAreaView, FlatList, Alert } from 'react-native'
-import RenderItem from '../../components/RenderItem'
 import  DropDownPicker  from 'react-native-dropdown-picker'
 import { Feather as Icon } from '@expo/vector-icons'
-
 import { IData } from '../../interfaces'
 import { retrieveData, storeData, removeItem } from '../../repository'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -11,39 +9,46 @@ import { KeyboardAvoidingView } from 'react-native'
 import { Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
+import Item from '../../components/Item'
+
 
 export default () => {
 
    const nav = useNavigation()
 
    const [data, setData] = useState<IData[]>([])
-   const [selectedProducts, setSelectedProducts] = useState<IData[]>([])
    const [nameOfList, setNameOfList] = useState<string>('')
+   const [productId, setProductId] = useState<string>('')
    const [lastPrice, setLastPrice] = useState<string>('0')
    const [qtd, setQtd] = useState<string>('1')
    const [includeProductList, setIncludeProductList] = useState<IData[]>([])
 
    const productControl = (item : any) => {
-       
-       const product = data.find(product => product.id == String(item.value) )
+      
+      setProductId(String(item.value))
 
-         if(product && selectedProducts.filter(product => product.id == item.value ).length <= 0){
-            
-            product.lastPrice = Number(lastPrice)
-            product.qtd = Number(qtd)
-
-            setSelectedProducts([product as IData, ...selectedProducts])
-            
-          }else{
-            Alert.alert('Oops', 'Este item já foi incluído.')
-          }
-       
    }
    
    const includeInList = () => {
 
-      setIncludeProductList(selectedProducts)
-      storeData(JSON.stringify(selectedProducts), 'listInUse')
+      const product = data.find(product => product.id == productId )
+
+      if(!product){
+         Alert.alert('Oops', 'Selecione um produto.')
+         return false;
+      }
+
+         if(product && includeProductList.filter(product => product.id == productId ).length <= 0){
+            
+            product.lastPrice = Number(lastPrice)
+            product.qtd = Number(qtd)
+
+            setIncludeProductList([product as IData, ...includeProductList])
+            storeData(JSON.stringify(includeProductList), 'listInUse')
+            
+          }else{
+            Alert.alert('Oops', 'Este item já foi incluído.')
+          }
       
    }
 
@@ -62,7 +67,7 @@ export default () => {
          const myList = {
             nameOfList,
             date: new Date(),
-            selectedProducts 
+            includeProductList 
          }
 
          retrieveData('allOfLists')
@@ -163,21 +168,26 @@ export default () => {
          </View>
 
          <View>
-            <View  style={{marginTop: 5, marginHorizontal: 30}}>
-               <Text>Quantidade</Text>
-               <TextInput 
-                  placeholder="Quantidade" 
-                  style={[styles.input]} 
-                  onChangeText={setQtd}
-                  value={qtd}
-               />
-               <Text>Preço anterior</Text>
-               <TextInput 
-                  placeholder="Preço anterior" 
-                  style={[styles.input]} 
-                  onChangeText={setLastPrice}
-                  value={lastPrice}
-               />
+            <View  style={{marginTop: 5, marginHorizontal: 30, flexDirection:'row', justifyContent: 'space-between'}}>
+               <View style={{ flexDirection: 'column' }}>
+                  <Text>Quantidade</Text>
+                  <TextInput
+                     placeholder="Quantidade"
+                     style={[styles.input]}
+                     onChangeText={setQtd}
+                     value={qtd}
+                  />
+               </View>
+
+               <View style={{ flexDirection: 'column' }}>
+                  <Text>Preço anterior</Text>
+                  <TextInput
+                     placeholder="Preço anterior"
+                     style={[styles.input]}
+                     onChangeText={setLastPrice}
+                     value={lastPrice}
+                  />
+               </View>
             </View>
             <View style={{ marginHorizontal: 30}}>
                <TouchableOpacity style={styles.button} onPress={() => includeInList()}>
@@ -192,8 +202,9 @@ export default () => {
             <SafeAreaView>
                <FlatList 
                   data={ includeProductList || [] }
-                  renderItem={RenderItem}
+                  renderItem={({item}) => Item(item)}
                   keyExtractor={item => item.id}
+                  
                />
             </SafeAreaView>
          </View>
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
    },
    listContainer: {
       marginVertical: 15,
-      maxHeight: '40%'
+      maxHeight: '50%'
    },
    input: {
       height: 40,

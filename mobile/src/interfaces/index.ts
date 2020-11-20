@@ -1,4 +1,4 @@
-interface Props{
+interface PropsItem{
    id: string
    title: string,
    qtd: number,
@@ -15,7 +15,8 @@ interface ListRenderItem {
       model: string,
       qtd: number,
       lastPrice: number
-   }
+   },
+   removeFromList: (id: string) => {}
 }
 
 interface IData {
@@ -35,7 +36,7 @@ interface IProduct {
 
 
 export {
-   Props,
+   PropsItem,
    ListRenderItem,
    IData,
    IProduct

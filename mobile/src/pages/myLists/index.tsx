@@ -26,7 +26,7 @@ export default () => {
          <View style={styles.listsContainer}>
             {
                lists.map((item: any) => (
-                  <RectButton style={[styles.button, styles.shadow]}>
+                  <RectButton style={[styles.button, styles.shadow]} key={item.nameOfList}>
                      <View style={styles.insideButtonContainer}>
                         <Text><Icon name="shopping-cart" size={20} color="#FFF" /></Text>
                         <Text style={{color: '#FFF', marginTop: 10}}>{item.nameOfList}</Text>

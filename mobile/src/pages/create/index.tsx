@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Text, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView, Platform } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
-import RenderItem from '../../components/RenderItem'
 
 import { makeid } from '../../util'
 
@@ -37,11 +36,11 @@ export default () => {
          <View style={styles.listContainer}>
             
             <SafeAreaView>
-               <FlatList 
+               {/* <FlatList 
                   data={ data }
                   renderItem={RenderItem}
                   keyExtractor={item => item.id}
-               />
+               /> */}
             </SafeAreaView>
 
          </View>
